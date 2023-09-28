@@ -18,7 +18,17 @@ export const databaseProviders = [
         default:
           config = databaseConfig.development;
       }
+
+      if (process.env.NODE_ENV === 'production') {
+        config.dialectOptions = {
+          ssl: {
+            require: true,
+            rejectUnauthorized: false,
+          },
+        };
+      }
       const sequelize = new Sequelize(config);
+
       sequelize.addModels([Participant]);
       await sequelize.sync({ alter: true });
       return sequelize;
