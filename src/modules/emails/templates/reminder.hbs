@@ -451,7 +451,7 @@
                                     >
                                   </p>
                                   <p style="line-height: 140%; font-size: 14px">
-                                    Estamos emocionados de contar contigo en el torneo FreshWar de Call of Duty Mobile. Queremos recordarte los detalles importantes para que tu participación en el evento sea un éxito:
+                                    Estamos emocionados de contar contigo en el torneo {{ name }} de {{ game }}. Queremos recordarte los detalles importantes para que tu participación en el evento sea un éxito:
                                     <br>
                                   </p>
                                   <br>
@@ -475,17 +475,25 @@
                                         
                                       "
                                       >
-                                        Fecha del Torneo: 30 de Octubre
+                                        Fecha del Torneo:
                                         <br>
-                                        Hora del Torneo: <br> 
-                                        - 7:00 PM (Colombia, México, Perú, Ecuador)
+                                        <ul>
+                                          {{#each datesAndTimes}}
+                                            <li>
+                                              <strong>{{this.datetime}}</strong>
+                                              <ul>
+                                                {{#with this.countries}}
+                                                  {{#each this}}
+                                                    <li>{{this}}</li>
+                                                  {{/each}}
+                                                {{/with}}
+                                              </ul>
+                                            </li>
+                                          {{/each}}
+                                        </ul>
                                         <br>
-                                        - 8:00 PM (Venezuela, Chile)
                                         <br>
-                                        - 9:00 PM (Argentina)
-                                        <br>
-                                        <br>
-                                        Por favor, asegúrate de revisar detenidamente las reglas y normativas del torneo en nuestra página web antes del evento para una experiencia de juego justa y emocionante (<a href="https://freshwar.vercel.app/files/normas.pdf target="_blank" rel="noopener noreferrer">Reglas</a>).
+                                        Por favor, asegúrate de revisar detenidamente las reglas y normativas del torneo en nuestra página web antes del evento para una experiencia de juego justa y emocionante (<a href="{{rules}}" target="_blank" rel="noopener noreferrer">Reglas</a>).
                                         <br>
                                         <br>
                                         
@@ -654,7 +662,7 @@
                                   <p style="font-size: 14px; line-height: 160%">
                                     Si tienes preguntas o necesitas ayuda puedes
                                     escribir al siguiente correo
-                                    mr.luiswebmaster@gmail.com
+                                    freshwarcommunity@gmail.com
                                   </p>
                                 </div>
                               </td>

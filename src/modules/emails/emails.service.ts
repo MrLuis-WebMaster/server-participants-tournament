@@ -49,12 +49,14 @@ export class EmailsService {
   }
 
   async sendBulkMailForParticipantPaidService(
+    tournamentId: number,
     subject: string,
     template: string,
     context: any = {},
   ) {
     try {
-      const recipients = await this.participantsService.findAllIsPaid();
+      const recipients =
+        await this.participantsService.findAllIsPaid(tournamentId);
       const mailOptions = recipients.map((recipient) => ({
         to: recipient.email,
         subject,
