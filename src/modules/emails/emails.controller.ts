@@ -1,9 +1,10 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Param } from '@nestjs/common';
 import { EmailsService } from './emails.service';
 import {
   ParticipantEmailtDto,
   ParticipantEmailInvitationtDto,
 } from './dto/email.dto';
+import { getDatesAndTimesByTimeZone } from 'src/utils/date';
 
 @Controller('emails')
 export class EmailsController {
@@ -30,14 +31,29 @@ export class EmailsController {
   }
   @Post('confirmation')
   async sendEmailConfirmation(
-    @Body() { fullName, email, userName }: ParticipantEmailtDto,
+    @Body()
+    {
+      fullName,
+      email,
+      userName,
+      game,
+      dateTime,
+      name,
+      rules,
+    }: ParticipantEmailtDto,
   ) {
     const to = email;
     const subject = 'Confirmación de Inscripción 🎉';
     const template = 'confirmationPay';
+    const datesAndTimes = getDatesAndTimesByTimeZone(dateTime);
+
     const context = {
       fullName,
       userName,
+      game,
+      datesAndTimes,
+      name,
+      rules,
     };
 
     try {
@@ -66,40 +82,63 @@ export class EmailsController {
       throw new Error('Error sending email');
     }
   }
-  @Post('reminder')
-  async sendEmailReminder() {
+  @Post('reminder/:tournamentId')
+  async sendEmailReminder(
+    @Body()
+    { game, dateTime, name, rules }: ParticipantEmailtDto,
+    @Param('tournamentId') tournamentId: number,
+  ) {
     const subject = '¡Recordatorio del Torneo! 🕹️';
     const template = 'reminder';
     try {
+      getDatesAndTimesByTimeZone;
       await this.emailService.sendBulkMailForParticipantPaidService(
+        tournamentId,
         subject,
         template,
+        {
+          rules: rules,
+          datesAndTimes: getDatesAndTimesByTimeZone(dateTime),
+          name: name,
+          game: game,
+        },
       );
       return 'Email sent successfully';
     } catch (error) {
+      console.log(error);
       throw new Error('Error sending email');
     }
   }
-  @Post('thanks')
-  async sendEmailThanks() {
+  @Post('thanks/:tournamentId')
+  async sendEmailThanks(
+    @Body()
+    { game, name }: ParticipantEmailtDto,
+    @Param('tournamentId') tournamentId: number,
+  ) {
     const subject = 'Agradecimiento por tu Participación 🙌';
     const template = 'thanks';
     try {
       await this.emailService.sendBulkMailForParticipantPaidService(
+        tournamentId,
         subject,
         template,
+        {
+          game,
+          name,
+        },
       );
       return 'Email sent successfully';
     } catch (error) {
       throw new Error('Error sending email');
     }
   }
-  @Post('feedback')
-  async sendEmailFeedback() {
+  @Post('feedback/:tournamentId')
+  async sendEmailFeedback(@Param('tournamentId') tournamentId: number) {
     const subject = '¡Tu Opinión Importa! Completa nuestra Encuesta 📝';
     const template = 'satisfaction';
     try {
       await this.emailService.sendBulkMailForParticipantPaidService(
+        tournamentId,
         subject,
         template,
       );
@@ -108,10 +147,17 @@ export class EmailsController {
       throw new Error('Error sending email');
     }
   }
-  @Post('invitation')
+  @Post('invitation/:tournamentId')
   async sendEmailInvitation(
     @Body()
-    { idGame, passwordGame, urlInvitation }: ParticipantEmailInvitationtDto,
+    {
+      idGame,
+      passwordGame,
+      urlInvitation,
+      name,
+      game,
+    }: ParticipantEmailInvitationtDto,
+    @Param('tournamentId') tournamentId: number,
   ) {
     const subject =
       '¡Prepárate para la Batalla! Invitación al Torneo de Call of Duty Mobile 🎮';
@@ -120,9 +166,12 @@ export class EmailsController {
       idGame,
       passwordGame,
       urlInvitation,
+      name,
+      game,
     };
     try {
       await this.emailService.sendBulkMailForParticipantPaidService(
+        tournamentId,
         subject,
         template,
         context,

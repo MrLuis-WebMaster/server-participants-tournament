@@ -6,5 +6,4 @@ export class ParticipantDto {
   readonly userId: string;
   readonly age: number;
   readonly platform: string;
-  readonly isPaid: boolean;
 }

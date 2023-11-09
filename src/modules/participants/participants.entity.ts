@@ -1,4 +1,12 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  BelongsToMany,
+} from 'sequelize-typescript';
+import { Tournament } from '../tournaments/tournaments.entity';
+import { TournamentParticipant } from '../tournament-participant/tournament-participant.entity';
 
 @Table
 export class Participant extends Model<Participant> {
@@ -22,18 +30,6 @@ export class Participant extends Model<Participant> {
   phone: string;
 
   @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  userName: string;
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  userId: string;
-
-  @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
@@ -45,10 +41,6 @@ export class Participant extends Model<Participant> {
   })
   platform: string;
 
-  @Column({
-    type: DataType.BOOLEAN,
-    allowNull: false,
-    defaultValue: false,
-  })
-  isPaid: boolean;
+  @BelongsToMany(() => Tournament, () => TournamentParticipant)
+  tournaments: Tournament[];
 }
