@@ -25,21 +25,15 @@ export class Participant extends Model<Participant> {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false,
+    allowNull: true,
   })
   phone: string;
 
   @Column({
     type: DataType.INTEGER,
-    allowNull: false,
+    allowNull: true,
   })
   age: number;
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  platform: string;
 
   @BelongsToMany(() => Tournament, () => TournamentParticipant)
   tournaments: Tournament[];

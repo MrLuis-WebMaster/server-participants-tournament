@@ -36,4 +36,10 @@ export class TournamentParticipant extends Model<TournamentParticipant> {
     defaultValue: false,
   })
   isPaid: boolean;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  platform: string;
 }

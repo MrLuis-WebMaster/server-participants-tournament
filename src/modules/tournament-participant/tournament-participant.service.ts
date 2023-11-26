@@ -35,7 +35,6 @@ export class TournamentParticipantsService {
       participant = await Participant.create({
         email: participantData.email,
         fullName: participantData.fullName,
-        platform: participantData.platform,
         age: participantData.age,
         phone: participantData.phone,
       });
@@ -63,6 +62,7 @@ export class TournamentParticipantsService {
       tournamentParticipant.userId = participantData.userId;
       tournamentParticipant.tournamentId = tournamentId;
       tournamentParticipant.participantId = participant.id;
+      tournamentParticipant.platform = participantData.platform;
       tournamentParticipant.save();
       isParticipantNewByTournament = true;
     }
