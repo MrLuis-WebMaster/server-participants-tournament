@@ -240,4 +240,28 @@ export class TournamentParticipantsService {
 
     return true;
   }
+
+  async getTournamentsByParticipantEmail(
+    emailParticipant: string,
+    page: number = 1,
+    pageSize: number = 10,
+  ): Promise<{ registers: TournamentParticipant[]; total: number }> {
+    const { count, rows: registers } =
+      await TournamentParticipant.findAndCountAll({
+        include: [
+          {
+            model: Participant,
+            attributes: [],
+            where: { email: emailParticipant },
+          },
+          {
+            model: Tournament,
+          },
+        ],
+        offset: (page - 1) * pageSize,
+        limit: pageSize,
+      });
+
+    return { registers, total: count };
+  }
 }
