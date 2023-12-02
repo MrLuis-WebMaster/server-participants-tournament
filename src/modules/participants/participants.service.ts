@@ -141,12 +141,14 @@ export class ParticipantsService {
     });
   }
 
-  async findByEmail(email: string): Promise<Participant> {
-    return await Participant.findOne({
-      where: {
-        email,
-      },
-    });
+  async findByEmail(email: string): Promise<Participant | object> {
+    return (
+      (await Participant.findOne({
+        where: {
+          email,
+        },
+      })) || {}
+    );
   }
 
   async findOne(id: number): Promise<Participant> {
