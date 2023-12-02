@@ -69,4 +69,15 @@ export class TournamentParticipantController {
       pageSize,
     );
   }
+
+  @Get('is-registered/:tournamentId/:participantId')
+  async checkParticipantIsRegisteredInTournament(
+    @Param('tournamentId') tournamentId: string,
+    @Param('participantId') participantId: string,
+  ) {
+    return this.tournamentParticipantsService.checkParticipantIsRegisteredInTournament(
+      Number(tournamentId),
+      Number(participantId),
+    );
+  }
 }

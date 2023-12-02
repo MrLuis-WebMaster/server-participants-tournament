@@ -264,4 +264,26 @@ export class TournamentParticipantsService {
 
     return { registers, total: count };
   }
+
+  async checkParticipantIsRegisteredInTournament(
+    tournamentId: number,
+    participantId: number,
+  ): Promise<boolean> {
+    const tournament = await Tournament.findByPk(tournamentId);
+    if (!tournament) {
+      throw new NotFoundException('Torneo no encontrado');
+    }
+
+    const participant = await Participant.findByPk(participantId);
+    if (!participant) {
+      throw new NotFoundException('Participante no encontrado');
+    }
+
+    const result = await tournament.$get('participants', {
+      where: {
+        id: participantId,
+      },
+    });
+    return !!result.length;
+  }
 }
