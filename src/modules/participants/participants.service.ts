@@ -23,6 +23,11 @@ interface CombinedData {
   platform: string;
 }
 
+class ParticipantRegister {
+  readonly fullName: string;
+  readonly email: string;
+}
+
 @Injectable()
 export class ParticipantsService {
   constructor(
@@ -124,6 +129,28 @@ export class ParticipantsService {
       throw new Error('Failed to fetch participants');
     }
   }
+
+  async findOneOrCreated(
+    participant: ParticipantRegister,
+  ): Promise<[Participant, boolean]> {
+    return await Participant.findOrCreate({
+      where: {
+        email: participant.email,
+      },
+      defaults: { ...participant },
+    });
+  }
+
+  async findByEmail(email: string): Promise<Participant | object> {
+    return (
+      (await Participant.findOne({
+        where: {
+          email,
+        },
+      })) || {}
+    );
+  }
+
   async findOne(id: number): Promise<Participant> {
     return await Participant.findByPk(id);
   }

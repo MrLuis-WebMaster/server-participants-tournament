@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { TournamentParticipantsService } from './tournament-participant.service';
 import { RegisterParticipantDto } from './dto/tournament-participant.dto';
 
@@ -44,6 +53,30 @@ export class TournamentParticipantController {
     return this.tournamentParticipantsService.updateParticipantTournament(
       Number(oldTournamentId),
       Number(newTournamentId),
+      Number(participantId),
+    );
+  }
+
+  @Get('participant-by-tournaments/:emailParticipant')
+  async getTournamentsByParticipantId(
+    @Param('emailParticipant') emailParticipant: string,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.tournamentParticipantsService.getTournamentsByParticipantEmail(
+      emailParticipant,
+      page,
+      pageSize,
+    );
+  }
+
+  @Get('is-registered/:tournamentId/:participantId')
+  async checkParticipantIsRegisteredInTournament(
+    @Param('tournamentId') tournamentId: string,
+    @Param('participantId') participantId: string,
+  ) {
+    return this.tournamentParticipantsService.checkParticipantIsRegisteredInTournament(
+      Number(tournamentId),
       Number(participantId),
     );
   }

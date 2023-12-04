@@ -4,6 +4,7 @@ import {
   Model,
   ForeignKey,
   DataType,
+  BelongsTo,
 } from 'sequelize-typescript';
 import { Tournament } from '../tournaments/tournaments.entity';
 import { Participant } from '../participants/participants.entity';
@@ -36,4 +37,16 @@ export class TournamentParticipant extends Model<TournamentParticipant> {
     defaultValue: false,
   })
   isPaid: boolean;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  platform: string;
+
+  @BelongsTo(() => Tournament, 'tournamentId')
+  tournament: Tournament;
+
+  @BelongsTo(() => Participant, 'participantId')
+  participant: Participant;
 }
