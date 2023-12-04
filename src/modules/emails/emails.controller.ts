@@ -3,6 +3,7 @@ import { EmailsService } from './emails.service';
 import {
   ParticipantEmailtDto,
   ParticipantEmailInvitationtDto,
+  ParticipantInfoBasicDto,
 } from './dto/email.dto';
 import { getDatesAndTimesByTimeZone } from 'src/utils/date';
 
@@ -176,6 +177,30 @@ export class EmailsController {
         template,
         context,
       );
+      return 'Email sent successfully';
+    } catch (error) {
+      throw new Error('Error sending email');
+    }
+  }
+  @Post('notification-admin')
+  async sendEmailToAdmin(
+    @Body()
+    { fullName, email, phone }: ParticipantInfoBasicDto,
+  ) {
+    //TODO: insert emails admin's
+
+    const to = 'mr.luiswebmaster@gmail.com';
+    const subject = 'Hola Admin, un usuario quiero organizar un torneo';
+    const template = 'notificationAdmin';
+
+    const context = {
+      fullName,
+      email,
+      phone,
+    };
+
+    try {
+      await this.emailService.sendMailService(to, subject, template, context);
       return 'Email sent successfully';
     } catch (error) {
       throw new Error('Error sending email');

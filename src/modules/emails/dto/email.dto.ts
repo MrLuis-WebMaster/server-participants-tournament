@@ -14,3 +14,9 @@ export class ParticipantEmailInvitationtDto extends ParticipantEmailtDto {
   readonly game: string;
   readonly name: string;
 }
+
+export class ParticipantInfoBasicDto {
+  readonly fullName: string;
+  readonly email: string;
+  readonly phone: string;
+}

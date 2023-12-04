@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+
+  freshwar_app:
+    container_name: freshwar_app_server
+    restart: always
+    ports:
+      - '3001:3001'
+    build: .
+    volumes:
+      - ./:/usr/src/freshwar_app
+    depends_on:
+      - db
+    environment:
+      - NODE_ENV
+  db:
+    image: postgres
+    container_name: freshwar_db_server
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: lgmu2000
+      POSTGRES_PASSWORD: 1234
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+    depends_on:
+      - pgadmin
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: lgmu2000@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: 1234
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin4
+
+volumes:
+  local_pgdata:
+  pgadmin-data:
+  ignore:
+

@@ -35,7 +35,6 @@ export class TournamentParticipantsService {
       participant = await Participant.create({
         email: participantData.email,
         fullName: participantData.fullName,
-        platform: participantData.platform,
         age: participantData.age,
         phone: participantData.phone,
       });
@@ -63,6 +62,7 @@ export class TournamentParticipantsService {
       tournamentParticipant.userId = participantData.userId;
       tournamentParticipant.tournamentId = tournamentId;
       tournamentParticipant.participantId = participant.id;
+      tournamentParticipant.platform = participantData.platform;
       tournamentParticipant.save();
       isParticipantNewByTournament = true;
     }
@@ -239,5 +239,51 @@ export class TournamentParticipantsService {
     );
 
     return true;
+  }
+
+  async getTournamentsByParticipantEmail(
+    emailParticipant: string,
+    page: number = 1,
+    pageSize: number = 10,
+  ): Promise<{ registers: TournamentParticipant[]; total: number }> {
+    const { count, rows: registers } =
+      await TournamentParticipant.findAndCountAll({
+        include: [
+          {
+            model: Participant,
+            attributes: [],
+            where: { email: emailParticipant },
+          },
+          {
+            model: Tournament,
+          },
+        ],
+        offset: (page - 1) * pageSize,
+        limit: pageSize,
+      });
+
+    return { registers, total: count };
+  }
+
+  async checkParticipantIsRegisteredInTournament(
+    tournamentId: number,
+    participantId: number,
+  ): Promise<boolean> {
+    const tournament = await Tournament.findByPk(tournamentId);
+    if (!tournament) {
+      throw new NotFoundException('Torneo no encontrado');
+    }
+
+    const participant = await Participant.findByPk(participantId);
+    if (!participant) {
+      throw new NotFoundException('Participante no encontrado');
+    }
+
+    const result = await tournament.$get('participants', {
+      where: {
+        id: participantId,
+      },
+    });
+    return !!result.length;
   }
 }
